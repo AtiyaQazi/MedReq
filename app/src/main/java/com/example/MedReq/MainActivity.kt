@@ -34,18 +34,19 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        // IMPORTANT:
-        // enableEdgeToEdge() intentionally NOT used.
-
-        val authViewModel = AuthViewModel(dataStore)
+        val authViewModel =
+            AuthViewModel(dataStore)
 
         setContent {
 
             FieldMedicAppTheme {
 
-                val navController = rememberNavController()
+                val navController =
+                    rememberNavController()
 
-                val authState by authViewModel.authState.observeAsState()
+                val authState by
+                authViewModel.authState
+                    .observeAsState()
 
                 DisposableEffect(authState) {
 
@@ -72,7 +73,7 @@ class MainActivity : ComponentActivity() {
                             }
                         }
 
-                        else -> {
+                        is AuthState.Unauthenticated -> {
 
                             val currentRoute =
                                 navController
@@ -95,69 +96,120 @@ class MainActivity : ComponentActivity() {
                                 }
                             }
                         }
+
+                        else -> {
+                            // Loading, Error, Success
+                        }
                     }
 
                     onDispose { }
                 }
 
                 Surface(
-                    modifier = Modifier.fillMaxSize(),
-                    color = MaterialTheme.colorScheme.background
+                    modifier =
+                        Modifier.fillMaxSize(),
+
+                    color =
+                        MaterialTheme.colorScheme.background
                 ) {
 
                     NavHost(
-                        navController = navController,
-                        startDestination = "login",
-                        modifier = Modifier.fillMaxSize()
+
+                        navController =
+                            navController,
+
+                        startDestination =
+                            "login",
+
+                        modifier =
+                            Modifier.fillMaxSize()
                     ) {
 
+                        // LOGIN
                         composable("login") {
 
                             LoginPage(
-                                modifier = Modifier.fillMaxSize(),
-                                navController = navController,
-                                authViewModel = authViewModel
+                                modifier =
+                                    Modifier.fillMaxSize(),
+
+                                navController =
+                                    navController,
+
+                                authViewModel =
+                                    authViewModel
                             )
                         }
 
+                        // SIGN UP
                         composable("signup") {
 
                             SignupPage(
-                                modifier = Modifier.fillMaxSize(),
-                                navController = navController,
-                                authViewModel = authViewModel
+                                modifier =
+                                    Modifier.fillMaxSize(),
+
+                                navController =
+                                    navController,
+
+                                authViewModel =
+                                    authViewModel
                             )
                         }
 
+                        // HOME / REQUESTS
                         composable("home") {
 
                             HomePage(
-                                modifier = Modifier.fillMaxSize(),
-                                navController = navController,
-                                authViewModel = authViewModel
+                                modifier =
+                                    Modifier.fillMaxSize(),
+
+                                navController =
+                                    navController,
+
+                                authViewModel =
+                                    authViewModel
                             )
                         }
 
+                        // NEW REQUEST
                         composable("new-request") {
 
                             NewRequestPage(
-                                modifier = Modifier.fillMaxSize(),
-                                navController = navController,
-                                authViewModel = authViewModel
+                                modifier =
+                                    Modifier.fillMaxSize(),
+
+                                navController =
+                                    navController,
+
+                                authViewModel =
+                                    authViewModel
                             )
                         }
 
+                        // PROFILE
                         composable("profile") {
 
                             ProfilePage(
-                                modifier = Modifier.fillMaxSize(),
-                                navController = navController,
-                                authViewModel = authViewModel
+                                modifier =
+                                    Modifier.fillMaxSize(),
+
+                                navController =
+                                    navController,
+
+                                authViewModel =
+                                    authViewModel
                             )
                         }
 
+                        // REQUEST DETAILS
                         composable(
-                            route = "request-details?id={id}&name={name}&injury={injury}&location={location}",
+
+                            route =
+                                "request-details" +
+                                        "?id={id}" +
+                                        "&name={name}" +
+                                        "&injury={injury}" +
+                                        "&location={location}" +
+                                        "&priority={priority}",
 
                             arguments = listOf(
 
@@ -175,14 +227,25 @@ class MainActivity : ComponentActivity() {
 
                                 navArgument("location") {
                                     defaultValue = ""
+                                },
+
+                                navArgument("priority") {
+                                    defaultValue = "High"
                                 }
                             )
+
                         ) {
 
                             RequestDetailsPage(
-                                modifier = Modifier.fillMaxSize(),
-                                navController = navController,
-                                authViewModel = authViewModel
+
+                                modifier =
+                                    Modifier.fillMaxSize(),
+
+                                navController =
+                                    navController,
+
+                                authViewModel =
+                                    authViewModel
                             )
                         }
                     }

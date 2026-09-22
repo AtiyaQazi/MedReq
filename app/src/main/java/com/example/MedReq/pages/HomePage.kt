@@ -47,16 +47,28 @@ fun HomePage(
     navController: NavController,
     authViewModel: AuthViewModel
 ) {
-    var filter by remember { mutableStateOf("All") }
-    var requests by remember { mutableStateOf<List<Request>>(emptyList()) }
+
+    var filter by remember {
+        mutableStateOf("All")
+    }
+
+    var requests by remember {
+        mutableStateOf<List<Request>>(emptyList())
+    }
 
     LaunchedEffect(Unit) {
+
         requests = authViewModel
             .getRequests()
             .mapNotNull { requestString ->
-                val parts = requestString.split(":")
+
+                val parts =
+                    requestString.split(":")
+
                 if (parts.size == 5) {
+
                     Request(
+                        id = parts[0],
                         name = parts[1],
                         location = parts[3],
                         injury = parts[2],
@@ -64,44 +76,83 @@ fun HomePage(
                         status = "Pending",
                         priority = parts[4]
                     )
+
                 } else {
+
                     null
                 }
             }
     }
 
-    val filteredRequests = when (filter) {
-        "Critical" -> requests.filter { it.priority == "Critical" }
-        "High" -> requests.filter { it.priority == "High" }
-        else -> requests
-    }
+    val filteredRequests =
+        when (filter) {
+
+            "Critical" ->
+                requests.filter {
+                    it.priority == "Critical"
+                }
+
+            "High" ->
+                requests.filter {
+                    it.priority == "High"
+                }
+
+            else ->
+                requests
+        }
 
     Scaffold(
-        modifier = Modifier.fillMaxSize(),
+
+        modifier =
+            Modifier.fillMaxSize(),
 
         topBar = {
+
             TopAppBar(
+
                 title = {
+
                     Text(
                         text = "MedReq",
-                        style = MaterialTheme.typography.headlineLarge
+                        style =
+                            MaterialTheme.typography.headlineLarge
                     )
                 }
             )
         },
 
         bottomBar = {
+
             BottomAppBar(
-                modifier = Modifier.padding(bottom = 75.dp),
-                containerColor = MaterialTheme.colorScheme.surface
+
+                modifier =
+                    Modifier.padding(
+                        bottom = 75.dp
+                    ),
+
+                containerColor =
+                    MaterialTheme.colorScheme.surface
+
             ) {
+
                 Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 7.5 .dp, vertical = 3.5.dp),
-                    horizontalArrangement = Arrangement.SpaceEvenly,
-                    verticalAlignment = Alignment.CenterVertically
+
+                    modifier =
+                        Modifier
+                            .fillMaxWidth()
+                            .padding(
+                                horizontal = 7.5.dp,
+                                vertical = 3.5.dp
+                            ),
+
+                    horizontalArrangement =
+                        Arrangement.SpaceEvenly,
+
+                    verticalAlignment =
+                        Alignment.CenterVertically
+
                 ) {
+
                     BottomNavItem(
                         "Requests",
                         Icons.Default.CheckCircle,
@@ -125,14 +176,17 @@ fun HomePage(
                 }
             }
         }
+
     ) { innerPadding ->
 
         Column(
+
             modifier = modifier
                 .fillMaxSize()
                 .padding(innerPadding)
-                .background(MaterialTheme.colorScheme.background)
-                // Welcome section ko 0.5 cm approx neeche kiya gaya hai
+                .background(
+                    MaterialTheme.colorScheme.background
+                )
                 .padding(
                     start = 16.dp,
                     end = 16.dp,
@@ -142,46 +196,95 @@ fun HomePage(
         ) {
 
             Text(
-                text = "Welcome to MedReq",
-                fontSize = 24.sp,
-                fontWeight = FontWeight.Bold,
-                color = MaterialTheme.colorScheme.primary,
-                modifier = Modifier.padding(bottom = 8.dp)
+
+                text =
+                    "Welcome to MedReq",
+
+                fontSize =
+                    24.sp,
+
+                fontWeight =
+                    FontWeight.Bold,
+
+                color =
+                    MaterialTheme.colorScheme.primary,
+
+                modifier =
+                    Modifier.padding(
+                        bottom = 8.dp
+                    )
             )
 
             Text(
-                text = "Manage and view medical requests efficiently.",
-                fontSize = 14.sp,
-                color = MaterialTheme.colorScheme.onBackground,
-                fontWeight = FontWeight.Medium,
-                modifier = Modifier.padding(bottom = 16.dp)
+
+                text =
+                    "Manage and view medical requests efficiently.",
+
+                fontSize =
+                    14.sp,
+
+                color =
+                    MaterialTheme.colorScheme.onBackground,
+
+                fontWeight =
+                    FontWeight.Medium,
+
+                modifier =
+                    Modifier.padding(
+                        bottom = 16.dp
+                    )
             )
 
             Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween
+
+                modifier =
+                    Modifier.fillMaxWidth(),
+
+                horizontalArrangement =
+                    Arrangement.SpaceBetween
+
             ) {
-                FilterButton("All", filter) {
+
+                FilterButton(
+                    text = "All",
+                    currentFilter = filter
+                ) {
                     filter = "All"
                 }
 
-                FilterButton("Critical", filter) {
+                FilterButton(
+                    text = "Critical",
+                    currentFilter = filter
+                ) {
                     filter = "Critical"
                 }
 
-                FilterButton("High", filter) {
+                FilterButton(
+                    text = "High",
+                    currentFilter = filter
+                ) {
                     filter = "High"
                 }
             }
 
             Spacer(
-                modifier = Modifier.padding(8.dp)
+                modifier =
+                    Modifier.padding(8.dp)
             )
 
             LazyColumn(
-                modifier = Modifier.fillMaxSize()
+
+                modifier =
+                    Modifier.fillMaxSize()
+
             ) {
-                items(items = filteredRequests) { request ->
+
+                items(
+                    items = filteredRequests,
+                    key = { request ->
+                        request.id
+                    }
+                ) { request ->
 
                     RequestCard(
                         request = request,
@@ -189,7 +292,8 @@ fun HomePage(
                     )
 
                     Spacer(
-                        modifier = Modifier.padding(8.dp)
+                        modifier =
+                            Modifier.padding(8.dp)
                     )
                 }
             }
@@ -197,194 +301,380 @@ fun HomePage(
     }
 }
 
+
 @Composable
 fun FilterButton(
     text: String,
     currentFilter: String,
     onClick: () -> Unit
 ) {
-    val buttonColor = when (text) {
-        "All" -> MaterialTheme.colorScheme.primary
-        "Critical" -> MaterialTheme.colorScheme.error
-        "High" -> MaterialTheme.colorScheme.tertiary
-        else -> MaterialTheme.colorScheme.primaryContainer
-    }
+
+    val buttonColor =
+        when (text) {
+
+            "All" ->
+                MaterialTheme.colorScheme.primary
+
+            "Critical" ->
+                MaterialTheme.colorScheme.error
+
+            "High" ->
+                MaterialTheme.colorScheme.tertiary
+
+            else ->
+                MaterialTheme.colorScheme.primaryContainer
+        }
 
     Button(
+
         onClick = onClick,
-        colors = ButtonDefaults.buttonColors(
-            containerColor = if (currentFilter == text) {
-                buttonColor
-            } else {
-                buttonColor.copy(alpha = 0.7f)
-            },
-            contentColor = MaterialTheme.colorScheme.onPrimary
-        ),
-        modifier = Modifier.padding(4.dp)
+
+        colors =
+            ButtonDefaults.buttonColors(
+
+                containerColor =
+                    if (currentFilter == text) {
+
+                        buttonColor
+
+                    } else {
+
+                        buttonColor.copy(
+                            alpha = 0.7f
+                        )
+                    },
+
+                contentColor =
+                    MaterialTheme.colorScheme.onPrimary
+            ),
+
+        modifier =
+            Modifier.padding(4.dp)
+
     ) {
+
         Text(
+
             text = text,
-            style = MaterialTheme.typography.bodyMedium,
-            fontWeight = FontWeight.SemiBold
+
+            style =
+                MaterialTheme.typography.bodyMedium,
+
+            fontWeight =
+                FontWeight.SemiBold
         )
     }
 }
+
 
 @Composable
 fun RequestCard(
     request: Request,
     navController: NavController
 ) {
+
     Column(
+
         modifier = Modifier
             .fillMaxWidth()
             .background(
-                color = MaterialTheme.colorScheme.surface,
-                shape = MaterialTheme.shapes.medium
+                color =
+                    MaterialTheme.colorScheme.surface,
+                shape =
+                    MaterialTheme.shapes.medium
             )
             .padding(16.dp)
     ) {
 
         Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
+
+            modifier =
+                Modifier.fillMaxWidth(),
+
+            horizontalArrangement =
+                Arrangement.SpaceBetween,
+
+            verticalAlignment =
+                Alignment.CenterVertically
+
         ) {
+
             Text(
-                text = request.name,
-                style = MaterialTheme.typography.titleMedium,
-                color = MaterialTheme.colorScheme.onSurface,
-                fontWeight = FontWeight.Medium
+
+                text =
+                    request.name,
+
+                style =
+                    MaterialTheme.typography.titleMedium,
+
+                color =
+                    MaterialTheme.colorScheme.onSurface,
+
+                fontWeight =
+                    FontWeight.Medium
             )
 
             Text(
-                text = request.priority,
-                style = MaterialTheme.typography.bodySmall,
-                color = when (request.priority) {
-                    "Critical" -> MaterialTheme.colorScheme.error
-                    "High" -> MaterialTheme.colorScheme.tertiary
-                    else -> MaterialTheme.colorScheme.onSurface
-                },
-                modifier = Modifier
-                    .background(
-                        color = when (request.priority) {
-                            "Critical" ->
-                                MaterialTheme.colorScheme.error.copy(alpha = 0.12f)
 
-                            "High" ->
-                                MaterialTheme.colorScheme.tertiary.copy(alpha = 0.15f)
+                text =
+                    request.priority,
 
-                            else ->
-                                MaterialTheme.colorScheme.primaryContainer
-                        },
-                        shape = MaterialTheme.shapes.small
+                style =
+                    MaterialTheme.typography.bodySmall,
+
+                color =
+                    when (request.priority) {
+
+                        "Critical" ->
+                            MaterialTheme.colorScheme.error
+
+                        "High" ->
+                            MaterialTheme.colorScheme.tertiary
+
+                        else ->
+                            MaterialTheme.colorScheme.onSurface
+                    },
+
+                modifier =
+                    Modifier
+                        .background(
+
+                            color =
+                                when (request.priority) {
+
+                                    "Critical" ->
+                                        MaterialTheme.colorScheme
+                                            .error
+                                            .copy(alpha = 0.12f)
+
+                                    "High" ->
+                                        MaterialTheme.colorScheme
+                                            .tertiary
+                                            .copy(alpha = 0.15f)
+
+                                    else ->
+                                        MaterialTheme.colorScheme
+                                            .primaryContainer
+                                },
+
+                            shape =
+                                MaterialTheme.shapes.small
+                        )
+                        .padding(
+                            horizontal = 8.dp,
+                            vertical = 4.dp
+                        )
+            )
+        }
+
+        Row(
+
+            verticalAlignment =
+                Alignment.CenterVertically
+
+        ) {
+
+            Icon(
+
+                imageVector =
+                    Icons.Default.LocationOn,
+
+                contentDescription =
+                    "Location",
+
+                tint =
+                    MaterialTheme.colorScheme.primary
+            )
+
+            Text(
+
+                text =
+                    request.location,
+
+                style =
+                    MaterialTheme.typography.bodyMedium,
+
+                color =
+                    MaterialTheme.colorScheme.onSurface,
+
+                modifier =
+                    Modifier.padding(
+                        start = 4.dp
                     )
-                    .padding(
-                        horizontal = 8.dp,
-                        vertical = 4.dp
+            )
+        }
+
+        Row(
+
+            verticalAlignment =
+                Alignment.CenterVertically
+
+        ) {
+
+            Icon(
+
+                imageVector =
+                    Icons.Default.Warning,
+
+                contentDescription =
+                    "Injury",
+
+                tint =
+                    MaterialTheme.colorScheme.tertiary
+            )
+
+            Text(
+
+                text =
+                    request.injury,
+
+                style =
+                    MaterialTheme.typography.bodyMedium,
+
+                color =
+                    MaterialTheme.colorScheme.onSurface,
+
+                modifier =
+                    Modifier.padding(
+                        start = 4.dp
                     )
             )
         }
 
         Row(
-            verticalAlignment = Alignment.CenterVertically
+
+            verticalAlignment =
+                Alignment.CenterVertically
+
         ) {
-            Icon(
-                imageVector = Icons.Default.LocationOn,
-                contentDescription = "Location",
-                tint = MaterialTheme.colorScheme.primary
-            )
 
             Text(
-                text = request.location,
-                style = MaterialTheme.typography.bodyMedium,
-                color = MaterialTheme.colorScheme.onSurface,
-                modifier = Modifier.padding(start = 4.dp)
+
+                text =
+                    request.time,
+
+                style =
+                    MaterialTheme.typography.bodyMedium,
+
+                color =
+                    MaterialTheme.colorScheme.onSurface
             )
         }
 
         Row(
-            verticalAlignment = Alignment.CenterVertically
+
+            verticalAlignment =
+                Alignment.CenterVertically
+
         ) {
+
             Icon(
-                imageVector = Icons.Default.Warning,
-                contentDescription = "Injury",
-                tint = MaterialTheme.colorScheme.tertiary
+
+                imageVector =
+                    Icons.Default.CheckCircle,
+
+                contentDescription =
+                    "Status",
+
+                tint =
+                    MaterialTheme.colorScheme.primary
             )
 
             Text(
-                text = request.injury,
-                style = MaterialTheme.typography.bodyMedium,
-                color = MaterialTheme.colorScheme.onSurface,
-                modifier = Modifier.padding(start = 4.dp)
-            )
-        }
 
-        Row(
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Text(
-                text = request.time,
-                style = MaterialTheme.typography.bodyMedium,
-                color = MaterialTheme.colorScheme.onSurface
-            )
-        }
+                text =
+                    request.status,
 
-        Row(
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Icon(
-                imageVector = Icons.Default.CheckCircle,
-                contentDescription = "Status",
-                tint = MaterialTheme.colorScheme.primary
-            )
+                style =
+                    MaterialTheme.typography.bodyMedium,
 
-            Text(
-                text = request.status,
-                style = MaterialTheme.typography.bodyMedium,
-                color = MaterialTheme.colorScheme.onSurface,
-                modifier = Modifier.padding(start = 4.dp)
+                color =
+                    MaterialTheme.colorScheme.onSurface,
+
+                modifier =
+                    Modifier.padding(
+                        start = 4.dp
+                    )
             )
         }
 
         Button(
+
             onClick = {
-                val id = Uri.encode(request.priority)
-                val name = Uri.encode(request.name)
-                val injury = Uri.encode(request.injury)
-                val location = Uri.encode(request.location)
+
+                val id =
+                    Uri.encode(request.id)
+
+                val name =
+                    Uri.encode(request.name)
+
+                val injury =
+                    Uri.encode(request.injury)
+
+                val location =
+                    Uri.encode(request.location)
+
+                val priority =
+                    Uri.encode(request.priority)
 
                 navController.navigate(
+
                     "request-details" +
                             "?id=$id" +
                             "&name=$name" +
                             "&injury=$injury" +
-                            "&location=$location"
+                            "&location=$location" +
+                            "&priority=$priority"
+
                 ) {
+
                     launchSingleTop = true
                 }
             },
-            colors = ButtonDefaults.buttonColors(
-                containerColor = MaterialTheme.colorScheme.primary
-            ),
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(top = 8.dp)
+
+            colors =
+                ButtonDefaults.buttonColors(
+
+                    containerColor =
+                        MaterialTheme.colorScheme.primary
+                ),
+
+            modifier =
+                Modifier
+                    .fillMaxWidth()
+                    .padding(top = 8.dp)
+
         ) {
+
             Text(
-                text = "View Details",
-                style = MaterialTheme.typography.bodyMedium,
-                color = MaterialTheme.colorScheme.onPrimary
+
+                text =
+                    "View Details",
+
+                style =
+                    MaterialTheme.typography.bodyMedium,
+
+                color =
+                    MaterialTheme.colorScheme.onPrimary
             )
         }
     }
 }
 
+
 data class Request(
+
+    val id: String,
+
     val name: String,
+
     val location: String,
+
     val injury: String,
+
     val time: String,
+
     val status: String,
+
     val priority: String
 )
