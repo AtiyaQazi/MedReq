@@ -1,9 +1,7 @@
-package com.example.fieldmedicapp
+package com.example.MedReq
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
@@ -26,19 +24,18 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
-import com.example.fieldmedicapp.pages.BottomNavItem
-import com.example.fieldmedicapp.pages.HomePage
-import com.example.fieldmedicapp.pages.LoginPage
-import com.example.fieldmedicapp.pages.NewRequestPage
-import com.example.fieldmedicapp.pages.ProfilePage
-import com.example.fieldmedicapp.pages.RequestDetailsPage
-import com.example.fieldmedicapp.pages.SignupPage
+import com.example.MedReq.pages.BottomNavItem
+import com.example.MedReq.pages.HomePage
+import com.example.MedReq.pages.LoginPage
+import com.example.MedReq.pages.NewRequestPage
+import com.example.MedReq.pages.ProfilePage
+import com.example.MedReq.pages.RequestDetailsPage
+import com.example.MedReq.pages.SignupPage
 import kotlinx.coroutines.launch
 
 @Composable

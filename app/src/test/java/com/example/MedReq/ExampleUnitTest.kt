@@ -1,4 +1,4 @@
-package com.example.fieldmedicapp
+package com.example.MedReq
 
 import org.junit.Test
 

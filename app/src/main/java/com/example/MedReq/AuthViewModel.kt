@@ -1,4 +1,4 @@
-package com.example.fieldmedicapp
+package com.example.MedReq
 
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences

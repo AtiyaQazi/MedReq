@@ -6,7 +6,7 @@ plugins {
 }
 
 android {
-    namespace = "com.example.fieldmedicapp"
+    namespace = "com.example.MedReq"
     compileSdk = 35
 
     defaultConfig {

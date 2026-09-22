@@ -1,11 +1,10 @@
-package com.example.fieldmedicapp.pages
+package com.example.MedReq.pages
 
 import android.content.Intent
 import android.net.Uri
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -38,12 +37,16 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
-import com.example.fieldmedicapp.AuthViewModel
+import com.example.MedReq.AuthViewModel
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ProfilePage(modifier: Modifier = Modifier, navController: NavController, authViewModel: AuthViewModel) {
+fun ProfilePage(
+    modifier: Modifier = Modifier,
+    navController: NavController,
+    authViewModel: AuthViewModel
+) {
     val context = LocalContext.current
     val scope = androidx.compose.runtime.rememberCoroutineScope()
     var email by remember { mutableStateOf("") }
@@ -57,26 +60,52 @@ fun ProfilePage(modifier: Modifier = Modifier, navController: NavController, aut
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("Profile", style = MaterialTheme.typography.headlineLarge) }
+                title = {
+                    Text(
+                        "Profile",
+                        style = MaterialTheme.typography.headlineLarge
+                    )
+                }
             )
         },
+
         bottomBar = {
             BottomAppBar(
-                containerColor = MaterialTheme.colorScheme.background
-            ) {
+                containerColor = MaterialTheme.colorScheme.surface,
+                modifier = Modifier.padding(bottom = 75.dp)
+            ){
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(8.dp),
                     horizontalArrangement = Arrangement.SpaceEvenly
                 ) {
-                    BottomNavItem("Requests", Icons.Default.CheckCircle, navController, "home")
-                    BottomNavItem("New", Icons.Default.Add, navController, "new-request")
-                    BottomNavItem("Profile", Icons.Default.AccountCircle, navController, "profile")
+                    BottomNavItem(
+                        "Requests",
+                        Icons.Default.CheckCircle,
+                        navController,
+                        "home"
+                    )
+
+                    BottomNavItem(
+                        "New",
+                        Icons.Default.Add,
+                        navController,
+                        "new-request"
+                    )
+
+                    BottomNavItem(
+                        "Profile",
+                        Icons.Default.AccountCircle,
+                        navController,
+                        "profile"
+                    )
                 }
             }
         },
+
         content = { padding ->
+
             Column(
                 modifier = modifier
                     .fillMaxSize()
@@ -85,9 +114,19 @@ fun ProfilePage(modifier: Modifier = Modifier, navController: NavController, aut
                 verticalArrangement = Arrangement.Center,
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                Text(text = "Email: $email", style = MaterialTheme.typography.bodyMedium, modifier = Modifier.padding(bottom = 16.dp))
 
-                Text(text = "Emergency Contacts", fontSize = 20.sp, color = MaterialTheme.colorScheme.onBackground, modifier = Modifier.padding(bottom = 16.dp))
+                Text(
+                    text = "Email: $email",
+                    style = MaterialTheme.typography.bodyMedium,
+                    modifier = Modifier.padding(bottom = 16.dp)
+                )
+
+                Text(
+                    text = "Emergency Contacts",
+                    fontSize = 20.sp,
+                    color = MaterialTheme.colorScheme.onBackground,
+                    modifier = Modifier.padding(bottom = 16.dp)
+                )
 
                 Button(
                     onClick = {
@@ -96,14 +135,27 @@ fun ProfilePage(modifier: Modifier = Modifier, navController: NavController, aut
                         }
                         context.startActivity(intent)
                     },
-                    colors = ButtonDefaults.buttonColors(containerColor = Color.Red),
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = Color.Red
+                    ),
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(vertical = 8.dp)
                 ) {
-                    Row(verticalAlignment = Alignment.CenterVertically) {
-                        Icon(Icons.Default.Warning, contentDescription = "Emergency Medical", tint = Color.White)
-                        Text(text = "Emergency Medical - 911", color = Color.White, style = MaterialTheme.typography.bodyMedium)
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Icon(
+                            Icons.Default.Warning,
+                            contentDescription = "Emergency Medical",
+                            tint = Color.White
+                        )
+
+                        Text(
+                            text = "Emergency Medical - 911",
+                            color = Color.White,
+                            style = MaterialTheme.typography.bodyMedium
+                        )
                     }
                 }
 
@@ -114,27 +166,56 @@ fun ProfilePage(modifier: Modifier = Modifier, navController: NavController, aut
                         }
                         context.startActivity(intent)
                     },
-                    colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFFF9800)),
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = Color(0xFFFF9800)
+                    ),
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(vertical = 8.dp)
                 ) {
-                    Row(verticalAlignment = Alignment.CenterVertically) {
-                        Icon(Icons.Default.Phone, contentDescription = "Command Center", tint = Color.White)
-                        Text(text = "Command Center - 1122", color = Color.White, style = MaterialTheme.typography.bodyMedium)
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Icon(
+                            Icons.Default.Phone,
+                            contentDescription = "Command Center",
+                            tint = Color.White
+                        )
+
+                        Text(
+                            text = "Command Center - 1122",
+                            color = Color.White,
+                            style = MaterialTheme.typography.bodyMedium
+                        )
                     }
                 }
 
                 Button(
-                    onClick = { authViewModel.signout(); navController.navigate("login") },
-                    colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF4CAF50).copy(alpha = 0.7f)),
+                    onClick = {
+                        authViewModel.signout()
+                        navController.navigate("login")
+                    },
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = Color(0xFF4CAF50).copy(alpha = 0.7f)
+                    ),
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(top = 16.dp)
                 ) {
-                    Row(verticalAlignment = Alignment.CenterVertically) {
-                        Icon(Icons.Default.ExitToApp, contentDescription = "Sign Out", tint = Color.White)
-                        Text(text = "Sign Out", color = Color.White, style = MaterialTheme.typography.bodyMedium)
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Icon(
+                            Icons.Default.ExitToApp,
+                            contentDescription = "Sign Out",
+                            tint = Color.White
+                        )
+
+                        Text(
+                            text = "Sign Out",
+                            color = Color.White,
+                            style = MaterialTheme.typography.bodyMedium
+                        )
                     }
                 }
             }
